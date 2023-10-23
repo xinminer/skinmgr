@@ -46,8 +46,8 @@ func RegisterService(addr string, dis DiscoveryConfig) error {
 	return nil
 }
 
-func Random(consulAddr, service, preferred string) (string, error) {
-	target, err := getConsulServices(consulAddr, service)
+func Random(consulAddr, service, preferred string, mate string) (string, error) {
+	target, err := getConsulServices(consulAddr, service, mate)
 	if err != nil {
 		return "", err
 	}
@@ -64,13 +64,13 @@ func Random(consulAddr, service, preferred string) (string, error) {
 	return svr.Service.Meta["target"], nil
 }
 
-func getConsulServices(consulAddr, service string) ([]*consulapi.ServiceEntry, error) {
+func getConsulServices(consulAddr, service string, mate string) ([]*consulapi.ServiceEntry, error) {
 	config := consulapi.DefaultConfig()
 	config.Address = consulAddr
 	client, err := consulapi.NewClient(config)
 	if err != nil {
 		return nil, err
 	}
-	services, _, err := client.Health().Service(service, "", false, nil)
+	services, _, err := client.Health().Service(service, mate, false, nil)
 	return services, err
 }

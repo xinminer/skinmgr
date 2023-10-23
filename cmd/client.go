@@ -50,6 +50,10 @@ var clientCmd = &cli.Command{
 			Name:  "preferred",
 			Usage: "preferred call consul service",
 		},
+		&cli.StringFlag{
+			Name:  "mate",
+			Usage: "force matching",
+		},
 		&cli.IntFlag{
 			Name:  "parallel",
 			Usage: "plot copy count",
@@ -64,6 +68,7 @@ var clientCmd = &cli.Command{
 		interval := ctx.Int("interval")
 		preferred := ctx.String("preferred")
 		parallel := ctx.Int("parallel")
+		mate := ctx.String("mate")
 
 		consulAddress := &net.TCPAddr{
 			IP:   net.ParseIP(consulAddr),
@@ -89,7 +94,7 @@ var clientCmd = &cli.Command{
 				log.Log.Errorf("scan file error: %v", err)
 				return
 			}
-			svr, err := balance.Random(consulAddress.String(), "storage-manage-service", preferred)
+			svr, err := balance.Random(consulAddress.String(), "storage-manage-service", preferred, mate)
 			if err != nil {
 				log.Log.Errorf("discovery error: %v", err)
 				return

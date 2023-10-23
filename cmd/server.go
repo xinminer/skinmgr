@@ -53,6 +53,10 @@ var serverCmd = &cli.Command{
 			Name:  "preferred",
 			Usage: "preferred call consul service",
 		},
+		&cli.StringFlag{
+			Name:  "mate",
+			Usage: "force matching",
+		},
 	},
 	Action: func(ctx *cli.Context) error {
 		targetAddr := ctx.String("target-addr")
@@ -62,6 +66,7 @@ var serverCmd = &cli.Command{
 		consulAddr := ctx.String("consul-addr")
 		consulPort := ctx.Int("consul-port")
 		preferred := ctx.String("preferred")
+		mate := ctx.String("mate")
 
 		targetAddress := &net.TCPAddr{
 			IP:   net.ParseIP(targetAddr),
@@ -76,7 +81,7 @@ var serverCmd = &cli.Command{
 		dis := balance.DiscoveryConfig{
 			ID:      guid.S(),
 			Name:    "storage-manage-service",
-			Tags:    []string{},
+			Tags:    []string{mate},
 			Port:    listenPort,
 			Address: listenAddr,
 			Meta: map[string]string{
