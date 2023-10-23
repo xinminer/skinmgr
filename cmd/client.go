@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/gtimer"
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/urfave/cli/v2"
@@ -69,7 +70,9 @@ var clientCmd = &cli.Command{
 			Port: consulPort,
 		}
 
-		gtimer.AddSingleton(ctx.Context, time.Second, func(ctx context.Context) {
+		gfCtx := gctx.New()
+
+		gtimer.SetInterval(gfCtx, time.Duration(interval)*time.Second, func(ctx context.Context) {
 			cps, err := exec.PlotCopyCount("chia_plot_copy")
 			if err != nil {
 				log.Log.Errorf("plot copy count error: %v", err)
@@ -77,7 +80,7 @@ var clientCmd = &cli.Command{
 			}
 
 			if cps >= parallel {
-				time.Sleep(time.Duration(interval) * time.Second)
+				log.Log.Warnf("plot copy count(%d) lgt parallel", cps)
 				return
 			}
 
@@ -98,7 +101,6 @@ var clientCmd = &cli.Command{
 				}
 			}()
 
-			time.Sleep(time.Duration(interval) * time.Second)
 		})
 
 		select {}
