@@ -69,13 +69,13 @@ var clientCmd = &cli.Command{
 		}
 
 		gtimer.AddSingleton(ctx.Context, time.Second, func(ctx context.Context) {
-			copys, err := exec.PlotCopyCount("chia_plot_copy")
+			cps, err := exec.PlotCopyCount("chia_plot_copy")
 			if err != nil {
 				log.Log.Errorf("plot copy count error: %v", err)
 				return
 			}
 
-			if copys >= parallel {
+			if cps >= parallel {
 				time.Sleep(time.Duration(interval) * time.Second)
 				return
 			}
