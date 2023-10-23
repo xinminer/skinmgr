@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"github.com/gogf/gf/v2/os/gtimer"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/urfave/cli/v2"
 	"net"
 	"skinmgr/internal/balance"
@@ -86,6 +87,11 @@ var clientCmd = &cli.Command{
 				return
 			}
 			svr, err := balance.Random(consulAddress.String(), "storage-manage-service", preferred)
+			if err != nil {
+				log.Log.Errorf("discovery error: %v", err)
+				return
+			}
+			svr = gstr.Split(svr, ":")[0]
 			if err = exec.PlotCopy(f, svr); err != nil {
 				log.Log.Errorf("plot copy error: %v", err)
 				return
