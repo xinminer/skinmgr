@@ -92,10 +92,11 @@ var clientCmd = &cli.Command{
 				return
 			}
 			svr = gstr.Split(svr, ":")[0]
-			if err = exec.PlotCopy(f, svr); err != nil {
-				log.Log.Errorf("plot copy error: %v", err)
-				return
-			}
+			go func() {
+				if err = exec.PlotCopy(f, svr); err != nil {
+					log.Log.Errorf("plot copy error: %v", err)
+				}
+			}()
 
 			time.Sleep(time.Duration(interval) * time.Second)
 		})
