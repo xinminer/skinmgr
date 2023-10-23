@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-func PlotCopy(file string, svr string) error {
-	cmd := fmt.Sprintf("chia_plot_copy -d -t %s -- %s", svr, file)
+func PlotCopy(f string, svr string) error {
+	cmd := fmt.Sprintf("chia_plot_copy -d -t %s -- %s", svr, f)
 	r, err := gproc.ShellExec(gctx.New(), cmd)
 	if err != nil {
 		return err
